@@ -1,0 +1,39 @@
+{
+    "name"       : "voceafiliado/sdk-php",
+    "description": "VoceAfiliado SDk for PHP.",
+    "keywords"   : ["vca", "sdk", "php"],
+    "license"    : "MIT",
+    "type"       : "project",
+
+    "authors": [
+        {
+            "name" : "Bruno Goncalves",
+            "email": "bugotech@gmali.com"
+        },
+        {
+            "name" : "Tiago Goncalves",
+            "email": "tihhgon@gmali.com"
+        }
+    ],
+
+    "require": {
+        "php"               : ">=5.5.0",
+        "illuminate/support": "5.4.*",
+        "guzzlehttp/guzzle" : "6.3.*"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "VCA\\Sdk\\": "src/"
+        }
+    },
+
+    "config": {
+        "preferred-install"  : "dist",
+        "sort-packages"      : true,
+        "optimize-autoloader": true
+    },
+
+    "minimum-stability": "dev",
+    "prefer-stable"    : true
+}
