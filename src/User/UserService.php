@@ -1,8 +1,8 @@
-<?php namespace VCA\Sdk\HidePotter;
+<?php namespace VCA\Sdk\User;
 
 use VCA\Sdk\Service;
 
-class HidePotterService extends Service
+class UserService extends Service
 {
     /**
      * @var array
@@ -12,11 +12,12 @@ class HidePotterService extends Service
     /**
      * Create new hotlink.
      *
-     * @param string $description
-     * @param string $urlTarget
-     * @param null|string $fbPixel
+     * @param string $name
+     * @param string $email
+     * @param $urlTarget
+     * @param null $fbPixel
      * @param string $status
-     * @return HidePotterResponse
+     * @return UserResponse
      */
     public function create($description, $urlTarget, $fbPixel = null, $status = 'inactived')
     {
@@ -42,7 +43,7 @@ class HidePotterService extends Service
      * @param string $hpid HidePotterId
      * @return mixed|null|object
      */
-    public function find($hpid)
+    public function info($hpid)
     {
         return new HidePotterResponse($this->client, $this->client->request('get', $this->uri($hpid)));
     }
