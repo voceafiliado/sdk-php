@@ -12,9 +12,9 @@ class HidePotterService extends Service
     /**
      * Create new hotlink.
      *
-     * @param $description
-     * @param $urlTarget
-     * @param null $fbPixel
+     * @param string $description
+     * @param string $urlTarget
+     * @param null|string $fbPixel
      * @param string $status
      * @return HidePotterResponse
      */
