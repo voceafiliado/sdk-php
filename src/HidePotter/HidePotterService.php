@@ -9,33 +9,47 @@ class HidePotterService extends Service
      */
     protected $versions = ['1'];
 
-    public function create($description, $urlTarget, $fbPixel = null)
+    /**
+     * Create new hotlink.
+     *
+     * @param $description
+     * @param $urlTarget
+     * @param null $fbPixel
+     * @param string $status
+     * @return HidePotterResponse
+     */
+    public function create($description, $urlTarget, $fbPixel = null, $status = 'inactived')
     {
         $data = [];
         $data['description'] = $description;
         $data['url_target']  = $urlTarget;
+        $data['status']      = $status;
 
         if (!is_null($fbPixel) && ($fbPixel !== false)) {
             $data['fb_pixel_id'] = $fbPixel;
         }
 
-        $response = $this->client->request('post', $this->getUri(''), [
+        $response = $this->client->responseJson($this->client->request('post', $this->uri(), [
             'json' => $data,
-        ]);
+        ]));
 
-        return null;
+        return new HidePotterResponse($this->client, $response);
     }
 
     /**
+     * Return info to hotlink.
+     *
      * @param string $hpid HidePotterId
      * @return mixed|null|object
      */
     public function info($hpid)
     {
-        return new HidePotterResponse($this->client, $this->client->request('get', $this->getUri($hpid)));
+        return new HidePotterResponse($this->client, $this->client->request('get', $this->uri($hpid)));
     }
 
     /**
+     * Check if server info is cloack.
+     *
      * @param $hpid
      * @param array $server
      * @param bool $debug
@@ -43,7 +57,7 @@ class HidePotterService extends Service
      */
     public function check($hpid, array $server, $debug = false)
     {
-        $response = $this->client->responseJson($this->client->request('get', sprintf('%s/check', $this->getUri($hpid)), [
+        $response = $this->client->responseJson($this->client->request('get', sprintf('%s/check', $this->uri($hpid)), [
             'query' => [
                 'server' => json_encode($server),
                 'vcadebug' => $debug ? 'true' : 'false',

@@ -16,16 +16,6 @@ abstract class Service
     protected $baseEndPoint = '';
 
     /**
-     * @var string
-     */
-    protected $version = '';
-
-    /**
-     * @var array
-     */
-    protected $versions = [];
-
-    /**
      * @param VcaClient $client
      * @param array $config
      */
@@ -34,45 +24,15 @@ abstract class Service
         $this->client = $client;
 
         $this->baseEndPoint = Arr::get($config, 'endpoint', $this->baseEndPoint);
-        $this->version = Arr::get($config, 'version', $this->version);
-
-        $this->version = ($this->version == 'latest') ? $this->getLastVersion() : $this->version;
-        if (! in_array($this->version, $this->versions)) {
-            throw new \Exception(sprintf("Invalid service version %s (%s)", $this->version, get_called_class()));
-        }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getLastVersion()
-    {
-        if (count($this->versions) == 0) {
-            return '';
-        }
-
-        return Arr::last($this->versions);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getUriBase()
-    {
-        $url = $this->baseEndPoint;
-
-        $url = str_replace('{version}', $this->version, $url);
-
-        return $url;
     }
 
     /**
      * @param string $part
      * @return string
      */
-    protected function getUri($part = '')
+    protected function uri($part = '')
     {
-        $url = $this->getUriBase();
+        $url = $this->baseEndPoint;
 
         if ($part != '') {
             $url .= '/' . $part;

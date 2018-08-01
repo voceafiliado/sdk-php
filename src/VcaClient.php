@@ -20,6 +20,11 @@ class VcaClient
     protected $config = [];
 
     /**
+     * @var array
+     */
+    protected $versions = ['1'];
+
+    /**
      * @var StatusService
      */
     protected $status;
@@ -52,7 +57,6 @@ class VcaClient
 
         return $this->status = new StatusService($this, [
             'endpoint' => $this->uri(),
-            'version' => $this->config('version', 'latest'),
         ]);
     }
 
@@ -67,7 +71,6 @@ class VcaClient
 
         return $this->hidepotter = new HidePotterService($this, [
             'endpoint' => $this->uri('hidepotter'),
-            'version' => $this->config('version', 'latest'),
         ]);
     }
 
@@ -93,7 +96,10 @@ class VcaClient
 
         $resource = is_null($part) ? '%s%s' : '%s/%s%s';
 
-        return sprintf($resource, $this->config('endpoint'), $part, $params);
+        $url = sprintf($resource, $this->config('endpoint'), $part, $params);
+        $url = str_replace('{version}', $this->getVersion(), $url);
+
+        return $url;
     }
 
     /**
@@ -158,7 +164,8 @@ class VcaClient
     {
         $json = json_decode($response->getBody(), true);
         if (is_null($json)) {
-            return null;
+            $message = trim($response->getBody());
+            throw new \Exception($message);
         }
 
         return $json;
@@ -192,5 +199,33 @@ class VcaClient
         $code = isset($json->error->code) ? $json->error->code : 0;
 
         throw new \Exception($message, $code);
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    protected function getVersion()
+    {
+        $version = $this->config('version', 'latest');
+        $version = ($version == 'latest') ? $this->getLastVersion() : $version;
+
+        if (! in_array($version, $this->versions)) {
+            throw new \Exception(sprintf("Invalid api version %s (%s)", $version));
+        }
+
+        return $version;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getLastVersion()
+    {
+        if (count($this->versions) == 0) {
+            return '';
+        }
+
+        return Arr::last($this->versions);
     }
 }
