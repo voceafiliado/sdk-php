@@ -19,11 +19,9 @@ class HidePotterService extends Service
             $data['fb_pixel_id'] = $fbPixel;
         }
 
-        $options = [
+        $response = $this->client->request('post', $this->getUri(''), [
             'json' => $data,
-        ];
-
-        $response = $this->client->request('post', $this->getUri(''), $options);
+        ]);
 
         return null;
     }
@@ -34,26 +32,24 @@ class HidePotterService extends Service
      */
     public function info($hpid)
     {
-        return $this->responseJson($this->client->request('get', $this->getUri($hpid)));
+        return new HidePotterResponse($this->client, $this->client->request('get', $this->getUri($hpid)));
     }
 
     /**
      * @param $hpid
      * @param array $server
      * @param bool $debug
-     * @return mixed|null|object
+     * @return HidePotterStatusResponse
      */
     public function check($hpid, array $server, $debug = false)
     {
-        $options = [
+        $response = $this->client->responseJson($this->client->request('get', sprintf('%s/check', $this->getUri($hpid)), [
             'query' => [
-                'server' => urlencode($server),
+                'server' => json_encode($server),
                 'vcadebug' => $debug ? 'true' : 'false',
             ],
-        ];
+        ]));
 
-        $response = $this->responseJson($this->client->request('get', sprintf('%s/check', $this->getUri($hpid)), $options));
-
-        return $response;
+        return new HidePotterStatusResponse($this->client, $response);
     }
 }

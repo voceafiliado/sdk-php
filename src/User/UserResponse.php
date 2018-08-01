@@ -1,17 +1,13 @@
-<?php namespace VCA\Sdk\Status;
+<?php namespace VCA\Sdk\User;
 
 use Carbon\Carbon;
 use VCA\Sdk\ResponseObject;
 
 /**
- * Class InfoResponse
- * @package VCA\Sdk\Status
- *
- * @property string $app
- * @property string $version
- * @property Carbon|null $date
+ * Class UserResponse
+ * @package VCA\Sdk\User
  */
-class InfoResponse extends ResponseObject
+class UserResponse extends ResponseObject
 {
     /**
      * Retorna a data e hora do servidor.

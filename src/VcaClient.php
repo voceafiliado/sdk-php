@@ -51,7 +51,7 @@ class VcaClient
         }
 
         return $this->status = new StatusService($this, [
-            'endpoint' => sprintf('%s/{version}', $this->config('endpoint')),
+            'endpoint' => $this->uri(),
             'version' => $this->config('version', 'latest'),
         ]);
     }
@@ -66,7 +66,7 @@ class VcaClient
         }
 
         return $this->hidepotter = new HidePotterService($this, [
-            'endpoint' => sprintf('%s/{version}/hidepotter', $this->config('endpoint')),
+            'endpoint' => $this->uri('hidepotter'),
             'version' => $this->config('version', 'latest'),
         ]);
     }
@@ -79,6 +79,21 @@ class VcaClient
     protected function config($key, $default = null)
     {
         return Arr::get($this->config, $key, $default);
+    }
+
+    /**
+     * @param null $part
+     * @param array $params
+     * @return string
+     */
+    public function uri($part = null, $params = [])
+    {
+        $params = implode('/', $params);
+        $params = ($params == '') ? '' : sprintf('/%s', $params);
+
+        $resource = is_null($part) ? '%s%s' : '%s/%s%s';
+
+        return sprintf($resource, $this->config('endpoint'), $part, $params);
     }
 
     /**
@@ -133,6 +148,20 @@ class VcaClient
                 $options['query']['XDEBUG_SESSION_START'] = $xdebug;
             }
         }
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return null|array
+     */
+    public function responseJson(ResponseInterface $response)
+    {
+        $json = json_decode($response->getBody(), true);
+        if (is_null($json)) {
+            return null;
+        }
+
+        return $json;
     }
 
     /**

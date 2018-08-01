@@ -15,7 +15,7 @@ class StatusService extends Service
      */
     public function version()
     {
-        return new InfoResponse($this->responseJson($this->client->request('get', $this->getUri())));
+        return new InfoResponse($this->client, $this->client->request('get', $this->getUri()));
     }
 
     /**
@@ -23,10 +23,10 @@ class StatusService extends Service
      */
     public function services()
     {
-        $array = $this->responseJson($this->client->request('get', $this->getUri('status/services')));
+        $array = $this->client->request('get', $this->getUri('status/services'));
 
         foreach ($array as $i => $item) {
-            $array[$i] = new ResponseObject($item);
+            $array[$i] = new ResponseObject($this->client, $item);
         }
 
         return $array;

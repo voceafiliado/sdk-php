@@ -80,18 +80,4 @@ abstract class Service
 
         return $url;
     }
-
-    /**
-     * @param ResponseInterface $response
-     * @return mixed|null|object
-     */
-    protected function responseJson(ResponseInterface $response)
-    {
-        $json = json_decode($response->getBody());
-        if (is_null($json)) {
-            return null;
-        }
-
-        return $json;
-    }
 }
