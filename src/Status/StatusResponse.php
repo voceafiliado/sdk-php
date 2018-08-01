@@ -11,7 +11,7 @@ use VCA\Sdk\ResponseObject;
  * @property string $version
  * @property Carbon|null $date
  */
-class InfoResponse extends ResponseObject
+class StatusResponse extends ResponseObject
 {
     /**
      * Retorna a data e hora do servidor.

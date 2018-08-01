@@ -11,11 +11,11 @@ class StatusService extends Service
     protected $versions = ['1'];
 
     /**
-     * @return null|InfoResponse
+     * @return null|StatusResponse
      */
     public function version()
     {
-        return new InfoResponse($this->client, $this->client->request('get', $this->uri()));
+        return new StatusResponse($this->client, $this->client->request('get', $this->uri()));
     }
 
     /**
