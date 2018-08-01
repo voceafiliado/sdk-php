@@ -2,7 +2,10 @@
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
+use GuzzleHttp\Cookie\SetCookie;
+use VCA\Sdk\Status\StatusService;
+use Psr\Http\Message\ResponseInterface;
+use VCA\Sdk\HidePotter\HidePotterService;
 
 class VcaClient
 {
@@ -17,9 +20,14 @@ class VcaClient
     protected $config = [];
 
     /**
-     * @var array
+     * @var StatusService
      */
-    protected $services = [];
+    protected $status;
+
+    /**
+     * @var HidePotterService
+     */
+    protected $hidepotter;
 
     /**
      * @param array $config
@@ -34,34 +42,126 @@ class VcaClient
     }
 
     /**
-     * @param $serviceName
-     * @return Service
-     * @throws \Exception
+     * @return StatusService
      */
-    protected function getService($serviceName)
+    public function status()
     {
-        $serviceName = strtolower($serviceName);
-
-        // Verificar se servico jah foi carregado
-        if (array_key_exists($serviceName, $this->services)) {
-            return $this->services[$serviceName];
+        if (! is_null($this->status)) {
+            return $this->status;
         }
 
-        // Carregar o servico
-        $method = sprintf('getService%s', Str::studly($serviceName));
-        if (! method_exists($this, $method)) {
-            throw new \Exception("Service [$serviceName] not found");
-        }
-
-        return $this->services[$serviceName] = call_user_func_array([$this, $method], []);
+        return $this->status = new StatusService($this, [
+            'endpoint' => sprintf('%s/{version}', $this->config('endpoint')),
+            'version' => $this->config('version', 'latest'),
+        ]);
     }
 
     /**
-     * @param $name
+     * @return HidePotterService
+     */
+    public function hidepotter()
+    {
+        if (! is_null($this->hidepotter)) {
+            return $this->hidepotter;
+        }
+
+        return $this->hidepotter = new HidePotterService($this, [
+            'endpoint' => sprintf('%s/{version}/hidepotter', $this->config('endpoint')),
+            'version' => $this->config('version', 'latest'),
+        ]);
+    }
+
+    /**
+     * @param $key
+     * @param null $default
      * @return mixed
      */
-    public function __get($name)
+    protected function config($key, $default = null)
     {
-        return $this->getService($name);
+        return Arr::get($this->config, $key, $default);
+    }
+
+    /**
+     * @param $method
+     * @param string $uri
+     * @param array $options
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function requestAsync($method, $uri = '', array $options = [])
+    {
+        $this->prepareOptions($options);
+
+        $response = $this->client->request($method, $uri, $options);
+
+        $this->testResponseError($response);
+
+        return $response;
+    }
+
+    /**
+     * @param $method
+     * @param string $uri
+     * @param array $options
+     * @return mixed
+     */
+    public function request($method, $uri = '', array $options = [])
+    {
+        $this->prepareOptions($options);
+
+        $response = $this->client->request($method, $uri, $options);
+
+        $this->testResponseError($response);
+
+        return $response;
+    }
+
+    /**
+     * @param $options
+     */
+    protected function prepareOptions(&$options)
+    {
+        // Send XDebug
+        $xdebug = $this->config('xdebug', false);
+        if ($xdebug !== false) {
+            // Verificar se deve enviar como query
+            if (isset($options['form_params'])) {
+                $options['form_params']['XDEBUG_SESSION_START'] = $xdebug;
+            } else{
+                if (! isset($options['query'])) {
+                    $options['query'] = [];
+                }
+                $options['query']['XDEBUG_SESSION_START'] = $xdebug;
+            }
+        }
+    }
+
+    /**
+     * Test if error.
+     *
+     * @param ResponseInterface $response
+     * @return bool
+     * @throws \Exception
+     */
+    protected function testResponseError(ResponseInterface $response)
+    {
+        // Verificar error http
+        if (! $response->getStatusCode() == 200) {
+            throw new \Exception("Error response: " . $response->getStatusCode());
+        }
+
+        // Verificar error via json
+        $json = json_decode($response->getBody());
+        if (is_null($json)) {
+            return true;
+        }
+
+        if (! isset($json->error)) {
+            return true;
+        }
+
+        $message = isset($json->error->message) ? $json->error->message : '???';
+        $code = isset($json->error->code) ? $json->error->code : 0;
+
+        throw new \Exception($message, $code);
     }
 }
