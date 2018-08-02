@@ -10,61 +10,38 @@ class UserService extends Service
     protected $versions = ['1'];
 
     /**
-     * Create new hotlink.
+     * Create new user.
      *
      * @param string $name
      * @param string $email
-     * @param $urlTarget
-     * @param null $fbPixel
-     * @param string $status
+     * @param string $password
+     * @param array $options
      * @return UserResponse
      */
-    public function create($description, $urlTarget, $fbPixel = null, $status = 'inactived')
+    public function create($name, $email, $password, $options = [])
     {
         $data = [];
-        $data['description'] = $description;
-        $data['url_target']  = $urlTarget;
-        $data['status']      = $status;
+        $data['name']     = $name;
+        $data['email']    = $email;
+        $data['password'] = $password;
 
-        if (!is_null($fbPixel) && ($fbPixel !== false)) {
-            $data['fb_pixel_id'] = $fbPixel;
-        }
+        $data = array_merge([], $options, $data);
 
         $response = $this->client->responseJson($this->client->request('post', $this->uri(), [
             'json' => $data,
         ]));
 
-        return new HidePotterResponse($this->client, $response);
+        return new UserResponse($this->client, $response);
     }
 
     /**
-     * Return info to hotlink.
+     * Find a user.
      *
-     * @param string $hpid HidePotterId
-     * @return mixed|null|object
+     * @param string $uid UserId
+     * @return UserResponse|null
      */
-    public function info($hpid)
+    public function find($uid)
     {
-        return new HidePotterResponse($this->client, $this->client->request('get', $this->uri($hpid)));
-    }
-
-    /**
-     * Check if server info is cloack.
-     *
-     * @param $hpid
-     * @param array $server
-     * @param bool $debug
-     * @return HidePotterStatusResponse
-     */
-    public function check($hpid, array $server, $debug = false)
-    {
-        $response = $this->client->responseJson($this->client->request('get', sprintf('%s/check', $this->uri($hpid)), [
-            'query' => [
-                'server' => json_encode($server),
-                'vcadebug' => $debug ? 'true' : 'false',
-            ],
-        ]));
-
-        return new HidePotterStatusResponse($this->client, $response);
+        return new UserResponse($this->client, $this->client->request('get', $this->uri($uid)));
     }
 }

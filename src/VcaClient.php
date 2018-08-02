@@ -6,6 +6,8 @@ use GuzzleHttp\Cookie\SetCookie;
 use VCA\Sdk\Status\StatusService;
 use Psr\Http\Message\ResponseInterface;
 use VCA\Sdk\HidePotter\HidePotterService;
+use VCA\Sdk\User\UserResponse;
+use VCA\Sdk\User\UserService;
 
 class VcaClient
 {
@@ -28,6 +30,11 @@ class VcaClient
      * @var StatusService
      */
     protected $status;
+
+    /**
+     * @var UserResponse
+     */
+    protected $user;
 
     /**
      * @var HidePotterService
@@ -57,6 +64,20 @@ class VcaClient
 
         return $this->status = new StatusService($this, [
             'endpoint' => $this->uri(),
+        ]);
+    }
+
+    /**
+     * @return UserService
+     */
+    public function user()
+    {
+        if (! is_null($this->user)) {
+            return $this->user;
+        }
+
+        return $this->user = new UserService($this, [
+            'endpoint' => $this->uri('users'),
         ]);
     }
 
@@ -152,6 +173,20 @@ class VcaClient
                     $options['query'] = [];
                 }
                 $options['query']['XDEBUG_SESSION_START'] = $xdebug;
+            }
+        }
+
+        // AccessToken
+        $accessToken = $this->config('access_token', false);
+        if ($accessToken !== false) {
+            // Verificar se deve enviar como query
+            if (isset($options['form_params'])) {
+                $options['form_params']['access_token'] = $accessToken;
+            } else{
+                if (! isset($options['query'])) {
+                    $options['query'] = [];
+                }
+                $options['query']['access_token'] = $accessToken;
             }
         }
     }

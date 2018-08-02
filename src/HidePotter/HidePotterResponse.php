@@ -36,7 +36,7 @@ class HidePotterResponse extends ResponseObject
      * Update hotlink.
      *
      * @param array $values
-     * @return mixed
+     * @return bool
      */
     public function update(array $values)
     {

@@ -40,7 +40,7 @@ class HidePotterService extends Service
      * Return info to hotlink.
      *
      * @param string $hpid HidePotterId
-     * @return mixed|null|object
+     * @return HidePotterResponse|null
      */
     public function find($hpid)
     {
