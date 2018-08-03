@@ -15,6 +15,8 @@ use VCA\Sdk\ResponseObject;
  * @property string $language
  * @property Carbon|null $updated_at
  * @property Carbon|null $created_at
+ * @property Carbon|null $last_login
+ * @property Carbon|null $last_access
  */
 class UserResponse extends ResponseObject
 {
@@ -85,5 +87,29 @@ class UserResponse extends ResponseObject
         }
 
         return false;
+    }
+
+    /**
+     * @return null|Carbon
+     */
+    protected function getLastLoginAttr($value)
+    {
+        if (! is_null($value)) {
+            return Carbon::createFromFormat(Carbon::ISO8601, $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * @return null|Carbon
+     */
+    protected function getLastAccessAttr($value)
+    {
+        if (! is_null($value)) {
+            return Carbon::createFromFormat(Carbon::ISO8601, $value);
+        }
+
+        return $value;
     }
 }
