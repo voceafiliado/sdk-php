@@ -30,13 +30,14 @@ abstract class Service
      * @param string $part
      * @return string
      */
-    protected function uri($part = '')
+    protected function uri($part = '', $params = [])
     {
-        $url = $this->baseEndPoint;
+        $params = implode('/', $params);
+        $params = ($params == '') ? '' : sprintf('/%s', $params);
 
-        if ($part != '') {
-            $url .= '/' . $part;
-        }
+        $resource = is_null($part) ? '%s%s' : '%s/%s%s';
+
+        $url = sprintf($resource, $this->baseEndPoint, $part, $params);
 
         return $url;
     }

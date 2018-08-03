@@ -6,7 +6,8 @@ use VCA\Sdk\User\UserResponse;
 class AuthService extends Service
 {
     /**
-     * @return bool
+     * @return string
+     * Loga e retorna o access_token
      */
     public function login($email, $password)
     {
@@ -17,9 +18,24 @@ class AuthService extends Service
             ],
         ]));
 
-        $this->client->config(['access_token' => $return['access_token']]);
+        $this->client->config(['access_token' => $token = $return['access_token']]);
 
-        return true;
+        return $token;
+    }
+
+    /**
+     * Fazer login pelo token e retorn o usuario.
+     *
+     * @param $access_token
+     * @return UserResponse
+     */
+    public function loginByToken($access_token)
+    {
+        $user = new UserResponse($this->client, $this->client->request('get', $this->uri('check', [$access_token])));
+
+        $this->client->config(['access_token' => $access_token]);
+
+        return $user;
     }
 
     /**
