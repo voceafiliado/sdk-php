@@ -27,14 +27,4 @@ class StatusService extends Service
 
         return $array;
     }
-
-    /**
-     * User logged.
-     *
-     * @return UserResponse
-     */
-    public function me()
-    {
-        return new UserResponse($this->client, $this->client->request('get', $this->uri('me')));
-    }
 }

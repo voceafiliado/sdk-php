@@ -7,6 +7,14 @@ use VCA\Sdk\ResponseObject;
 /**
  * Class UserResponse
  * @package VCA\Sdk\User
+ *
+ * @property string $id
+ * @property string $name
+ * @property string $email
+ * @property string $status
+ * @property string $language
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $created_at
  */
 class UserResponse extends ResponseObject
 {
