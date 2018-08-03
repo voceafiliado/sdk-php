@@ -10,7 +10,7 @@ $vca = new \VCA\Sdk\VcaClient($config);
 
 try {
     // Registrar HidePotter
-    $r = $vca->hidepotter()->create('Descricao', 'url', 'pixel');
+    $r = $vca->hidepotter()->create('Descricao', 'url de venda', 'url da safe', 'pixel');
 
     // Ativar
     $r->active();

@@ -8,16 +8,18 @@ class HidePotterService extends Service
      * Create new hotlink.
      *
      * @param string $description
-     * @param string $urlTarget
+     * @param string $urlSale
+     * @param string $urlSafe
      * @param null|string $fbPixel
      * @param string $status
      * @return HidePotterResponse
      */
-    public function create($description, $urlTarget, $fbPixel = null, $status = 'inactived')
+    public function create($description, $urlSale, $urlSafe, $fbPixel = null, $status = 'inactived')
     {
         $data = [];
         $data['description'] = $description;
-        $data['url_target']  = $urlTarget;
+        $data['url_sale_page']  = $urlSale;
+        $data['url_safe_page']  = $urlSafe;
         $data['status']      = $status;
 
         if (!is_null($fbPixel) && ($fbPixel !== false)) {
