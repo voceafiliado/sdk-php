@@ -12,6 +12,9 @@ try {
     // Carregar informacoes do HidePotter
     $r = $vca->hidepotter()->check('857645836548634', $_SERVER, 'script-v1.0');
 
+    // Carregar cache da pagina
+    $html = $r->getPageContent();
+
     if ($r->isSalesFunnel()) {
         echo "go sales funel";
     } else {

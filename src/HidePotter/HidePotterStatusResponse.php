@@ -65,4 +65,17 @@ class HidePotterStatusResponse extends ResponseObject
     {
         return ($this->type == self::typeSalesFunnel);
     }
+
+    /**
+     * @return mixed|string
+     */
+    public function getPageContent()
+    {
+        $content = $this->pageContent;
+        if ($content != '') {
+            $content = base64_decode($content);
+        }
+
+        return $content;
+    }
 }
