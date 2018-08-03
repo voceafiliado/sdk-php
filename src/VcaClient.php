@@ -48,6 +48,14 @@ class VcaClient
     protected $hidepotter;
 
     /**
+     * @var array
+     */
+    protected $endpoints = [
+        'production' => 'http://api.voceafiliado.com/{version}',
+        'sanbox' => 'http://api.sandbox.voceafiliado.com/{version}',
+    ];
+
+    /**
      * @param array $config
      */
     public function __construct($config = [])
@@ -148,10 +156,32 @@ class VcaClient
 
         $resource = is_null($part) ? '%s%s' : '%s/%s%s';
 
-        $url = sprintf($resource, $this->config('endpoint'), $part, $params);
+        $url = sprintf($resource, $this->getEndPoint(), $part, $params);
         $url = str_replace('{version}', $this->getVersion(), $url);
 
         return $url;
+    }
+
+    /**
+     * Retorna o endpoint pelo ambiente.
+     * 
+     * @return string
+     * @throws \Exception
+     */
+    protected function getEndPoint()
+    {
+        // Verificar se foi informado o endpoitn explicito
+        $url = $this->config('endpoint');
+        if (! is_null($url)) {
+            return $url;
+        }
+
+        $env = $this->config('environment', 'production');
+        if (! array_key_exists($env, $this->endpoints)) {
+            throw new \Exception("Environment api client invalid [$env]");
+        }
+
+        return $this->endpoints[$env];
     }
 
     /**
