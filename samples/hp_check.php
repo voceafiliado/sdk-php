@@ -10,7 +10,7 @@ $vca = new \VCA\Sdk\VcaClient($config);
 
 try {
     // Carregar informacoes do HidePotter
-    $r = $vca->hidepotter()->check('857645836548634', $_SERVER);
+    $r = $vca->hidepotter()->check('857645836548634', $_SERVER, 'script-v1.0');
 
     if ($r->isSalesFunnel()) {
         echo "go sales funel";

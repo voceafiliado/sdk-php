@@ -47,15 +47,17 @@ class HidePotterService extends Service
      *
      * @param $hpid
      * @param array $server
+     * @param string $scriptVersion
      * @param bool $debug
      * @return HidePotterStatusResponse
      */
-    public function check($hpid, array $server, $debug = false)
+    public function check($hpid, array $server, $scriptVersion, $debug = false)
     {
         $response = $this->client->responseJson($this->client->request('get', sprintf('%s/check', $this->uri($hpid)), [
             'query' => [
                 'server' => json_encode($server),
                 'vcadebug' => $debug ? 'true' : 'false',
+                'vscript' => $scriptVersion,
             ],
         ]));
 
