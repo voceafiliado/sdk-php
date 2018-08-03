@@ -52,7 +52,7 @@ class VcaClient
      */
     protected $endpoints = [
         'production' => 'http://api.voceafiliado.com/{version}',
-        'sanbox' => 'http://api.sandbox.voceafiliado.com/{version}',
+        'sandbox' => 'http://api.sandbox.voceafiliado.com/{version}',
     ];
 
     /**
@@ -164,7 +164,7 @@ class VcaClient
 
     /**
      * Retorna o endpoint pelo ambiente.
-     * 
+     *
      * @return string
      * @throws \Exception
      */
