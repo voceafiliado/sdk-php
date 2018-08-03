@@ -5,11 +5,6 @@ use VCA\Sdk\Service;
 class HidePotterService extends Service
 {
     /**
-     * @var array
-     */
-    protected $versions = ['1'];
-
-    /**
      * Create new hotlink.
      *
      * @param string $description

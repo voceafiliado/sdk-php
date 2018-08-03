@@ -5,11 +5,6 @@ use VCA\Sdk\Service;
 class UserService extends Service
 {
     /**
-     * @var array
-     */
-    protected $versions = ['1'];
-
-    /**
      * Create new user.
      *
      * @param string $name

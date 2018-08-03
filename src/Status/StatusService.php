@@ -2,14 +2,10 @@
 
 use VCA\Sdk\Service;
 use VCA\Sdk\ResponseObject;
+use VCA\Sdk\User\UserResponse;
 
 class StatusService extends Service
 {
-    /**
-     * @var array
-     */
-    protected $versions = ['1'];
-
     /**
      * @return null|StatusResponse
      */
@@ -30,5 +26,15 @@ class StatusService extends Service
         }
 
         return $array;
+    }
+
+    /**
+     * User logged.
+     *
+     * @return UserResponse
+     */
+    public function me()
+    {
+        return new UserResponse($this->client, $this->client->request('get', $this->uri('me')));
     }
 }

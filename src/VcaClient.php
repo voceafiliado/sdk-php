@@ -3,6 +3,7 @@
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
 use GuzzleHttp\Cookie\SetCookie;
+use VCA\Sdk\Auth\AuthService;
 use VCA\Sdk\Status\StatusService;
 use Psr\Http\Message\ResponseInterface;
 use VCA\Sdk\HidePotter\HidePotterService;
@@ -25,6 +26,11 @@ class VcaClient
      * @var array
      */
     protected $versions = ['1'];
+
+    /**
+     * @var AuthService
+     */
+    protected $auth;
 
     /**
      * @var StatusService
@@ -51,6 +57,26 @@ class VcaClient
         $config_http = Arr::get($config, 'http', []);
 
         $this->client = new Client($config_http);
+
+        // Guardar access token original
+        $accessToken = $this->config('access_token', false);
+        if ($accessToken !== false) {
+            $this->config(['access_token_original' => $accessToken]);
+        }
+    }
+
+    /**
+     * @return AuthService
+     */
+    public function auth()
+    {
+        if (! is_null($this->auth)) {
+            return $this->auth;
+        }
+
+        return $this->auth = new AuthService($this, [
+            'endpoint' => $this->uri('auth'),
+        ]);
     }
 
     /**
@@ -100,8 +126,13 @@ class VcaClient
      * @param null $default
      * @return mixed
      */
-    protected function config($key, $default = null)
+    public function config($key, $default = null)
     {
+        if (is_array($key) && is_null($default)) {
+            $this->config = array_merge($this->config, $key);
+            return true;
+        }
+
         return Arr::get($this->config, $key, $default);
     }
 
