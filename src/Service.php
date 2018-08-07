@@ -35,7 +35,7 @@ abstract class Service
         $params = implode('/', $params);
         $params = ($params == '') ? '' : sprintf('/%s', $params);
 
-        $resource = is_null($part) ? '%s%s' : '%s/%s%s';
+        $resource = (is_null($part) || (trim($part) == '')) ? '%s' : '%s/%s%s';
 
         $url = sprintf($resource, $this->baseEndPoint, $part, $params);
 

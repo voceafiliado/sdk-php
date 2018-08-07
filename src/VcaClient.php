@@ -192,7 +192,7 @@ class VcaClient
      */
     public function requestAsync($method, $uri = '', array $options = [])
     {
-        $this->prepareOptions($options);
+        $this->prepareOptions($method, $options);
 
         $response = $this->client->request($method, $uri, $options);
 
@@ -209,7 +209,7 @@ class VcaClient
      */
     public function request($method, $uri = '', array $options = [])
     {
-        $this->prepareOptions($options);
+        $this->prepareOptions($method, $options);
 
         $response = $this->client->request($method, $uri, $options);
 
@@ -221,34 +221,24 @@ class VcaClient
     /**
      * @param $options
      */
-    protected function prepareOptions(&$options)
+    protected function prepareOptions($method, &$options)
     {
         // Send XDebug
         $xdebug = $this->config('xdebug', false);
         if ($xdebug !== false) {
-            // Verificar se deve enviar como query
-            if (isset($options['form_params'])) {
-                $options['form_params']['XDEBUG_SESSION_START'] = $xdebug;
-            } else{
-                if (! isset($options['query'])) {
-                    $options['query'] = [];
-                }
-                $options['query']['XDEBUG_SESSION_START'] = $xdebug;
+            if (! isset($options['query'])) {
+                $options['query'] = [];
             }
+            $options['query']['XDEBUG_SESSION_START'] = $xdebug;
         }
 
         // AccessToken
         $accessToken = $this->config('access_token', false);
         if ($accessToken !== false) {
-            // Verificar se deve enviar como query
-            if (isset($options['form_params'])) {
-                $options['form_params']['access_token'] = $accessToken;
-            } else{
-                if (! isset($options['query'])) {
-                    $options['query'] = [];
-                }
-                $options['query']['access_token'] = $accessToken;
+            if (! isset($options['query'])) {
+                $options['query'] = [];
             }
+            $options['query']['access_token'] = $accessToken;
         }
     }
 

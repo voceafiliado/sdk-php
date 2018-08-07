@@ -46,7 +46,7 @@ class UserResponse extends ResponseObject
      * @param bool $value
      * @return bool
      */
-    public function setStatus($value)
+    protected function setStatus($value)
     {
         return $this->update([
             'status' => $value
@@ -60,7 +60,13 @@ class UserResponse extends ResponseObject
      */
     public function active()
     {
-        return $this->setStatus('actived');
+        $ret = $this->client->responseJson($this->client->request('get', $this->client->uri('users', [$this->id, 'active'])));
+
+        if ($ret === true) {
+            $this->data = array_merge([], $this->data, ['status' => 'actived']);
+        }
+
+        return $ret;
     }
 
     /**
