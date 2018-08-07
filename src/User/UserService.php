@@ -1,5 +1,6 @@
 <?php namespace VCA\Sdk\User;
 
+use VCA\Sdk\Collection;
 use VCA\Sdk\Service;
 
 class UserService extends Service
@@ -32,6 +33,18 @@ class UserService extends Service
         ]));
 
         return new UserResponse($this->client, $response);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function index()
+    {
+        $array = $this->client->responseJson($this->client->request('get', $this->uri()));
+
+        return new Collection($array, function ($key, $value) {
+            return new UserResponse($this->client, $value);
+        });
     }
 
     /**

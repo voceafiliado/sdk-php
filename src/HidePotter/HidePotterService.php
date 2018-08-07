@@ -1,6 +1,7 @@
 <?php namespace VCA\Sdk\HidePotter;
 
 use VCA\Sdk\Service;
+use VCA\Sdk\Collection;
 
 class HidePotterService extends Service
 {
@@ -31,6 +32,18 @@ class HidePotterService extends Service
         ]));
 
         return new HidePotterResponse($this->client, $response);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function index()
+    {
+        $array = $this->client->responseJson($this->client->request('get', $this->uri()));
+
+        return new Collection($array, function ($key, $value) {
+            return new HidePotterResponse($this->client, $value);
+        });
     }
 
     /**

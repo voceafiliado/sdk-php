@@ -1,8 +1,6 @@
 <?php namespace VCA\Sdk\Status;
 
 use VCA\Sdk\Service;
-use VCA\Sdk\ResponseObject;
-use VCA\Sdk\User\UserResponse;
 
 class StatusService extends Service
 {
@@ -19,12 +17,6 @@ class StatusService extends Service
      */
     public function services()
     {
-        $array = $this->client->request('get', $this->uri('status/services'));
-
-        foreach ($array as $i => $item) {
-            $array[$i] = new ResponseObject($this->client, $item);
-        }
-
-        return $array;
+        return $this->client->responseJson($this->client->request('get', $this->uri('status/services')));
     }
 }
