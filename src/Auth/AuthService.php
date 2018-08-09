@@ -6,6 +6,11 @@ use VCA\Sdk\User\UserResponse;
 class AuthService extends Service
 {
     /**
+     * @var null|bool
+     */
+    protected $is_admin = null;
+
+    /**
      * @return string
      * Loga e retorna o access_token
      */
@@ -74,5 +79,19 @@ class AuthService extends Service
         $ability = is_array($ability) ? implode(',', $ability) : $ability;
 
         return $this->client->responseJson($this->client->request('get', $this->uri('can', [$ability])));
+    }
+
+    /**
+     * Check if user is admin.
+     *
+     * @return bool|null
+     */
+    public function isAdmin()
+    {
+        if (! is_null($this->is_admin)) {
+            return $this->is_admin;
+        }
+
+        return $this->is_admin = $this->can('admin');
     }
 }
