@@ -42,60 +42,6 @@ class UserResponse extends ResponseObject
     }
 
     /**
-     * Set new status
-     * @param bool $value
-     * @return bool
-     */
-    protected function setStatus($value)
-    {
-        return $this->update([
-            'status' => $value
-        ]);
-    }
-
-    /**
-     * Alias to change status to actived.
-     *
-     * @return bool
-     */
-    public function active()
-    {
-        $ret = $this->client->responseJson($this->client->request('get', $this->client->uri('users', [$this->id, 'active'])));
-
-        if ($ret === true) {
-            $this->data = array_merge([], $this->data, ['status' => 'actived']);
-        }
-
-        return $ret;
-    }
-
-    /**
-     * Alias to change status to blocked.
-     *
-     * @return bool
-     */
-    public function block()
-    {
-        return $this->setStatus('blocked');
-    }
-
-    /**
-     * Gerar nova api key.
-     *
-     * @return bool|mixed
-     */
-    public function generateApiKey()
-    {
-        $new_key = str_replace('.', '', uniqid('', true));
-
-        if ($this->update(['api_token' => $new_key])) {
-            return $new_key;
-        }
-
-        return false;
-    }
-
-    /**
      * @return null|Carbon
      */
     protected function getLastLoginAttr($value)

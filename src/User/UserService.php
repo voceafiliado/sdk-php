@@ -57,4 +57,17 @@ class UserService extends Service
     {
         return new UserResponse($this->client, $this->client->request('get', $this->uri($uid)));
     }
+
+    /**
+     * Actived user while pending.
+     *
+     * @param $uid
+     * @return array|null
+     */
+    public function active($uid)
+    {
+        $ret = $this->client->responseJson($this->client->request('get', $this->uri($uid, ['active'])));
+
+        return $ret;
+    }
 }
