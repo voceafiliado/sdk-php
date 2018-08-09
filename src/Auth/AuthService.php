@@ -62,4 +62,17 @@ class AuthService extends Service
     {
         return new UserResponse($this->client, $this->client->request('get', $this->uri('me')));
     }
+
+    /**
+     * Check permissions.
+     *
+     * @param $ability
+     * @return bool
+     */
+    public function can($ability)
+    {
+        $ability = is_array($ability) ? implode(',', $ability) : $ability;
+
+        return $this->client->responseJson($this->client->request('get', $this->uri('can', [$ability])));
+    }
 }
