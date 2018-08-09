@@ -67,10 +67,10 @@ class VcaClient
         $this->client = new Client($config_http);
 
         // Guardar access token original
-        $accessToken = $this->config('access_token', false);
-        if ($accessToken !== false) {
-            $this->config(['access_token_original' => $accessToken]);
-        }
+        //$accessToken = $this->config('access_token', false);
+        //if ($accessToken !== false) {
+        //    $this->config(['access_token_original' => $accessToken]);
+        //}
     }
 
     /**
