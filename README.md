@@ -8,3 +8,8 @@ Para instalar o vca-sdk-php via composer, você deve no console no diretório do
 ```
 composer require "voceafiliado/sdk-php"
 ```
+
+---
+![logo](https://rawgit.com/voceafiliado/docs/master/imgs/logo.png)
+
+Para maiores informações, escreva para [contato@voceafiliado.com](mailto:contato@voceafiliado.com).
