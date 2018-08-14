@@ -1,5 +1,5 @@
 # VCA | SDK PHP
-VocêAfiliado SDK for PHP
+VocêAfiliado SDK for PHP.
 
 ## Instalação
 
