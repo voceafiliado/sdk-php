@@ -6,25 +6,22 @@ use VCA\Sdk\Service;
 class UserService extends Service
 {
     /**
-     * @var array
-     */
-    protected $versions = ['1'];
-
-    /**
      * Create new user.
      *
      * @param string $name
      * @param string $email
      * @param string $password
+     * @param string $document
      * @param array $options
      * @return UserResponse
      */
-    public function create($name, $email, $password, $options = [])
+    public function create($name, $email, $password, $document, $options = [])
     {
         $data = [];
         $data['name']     = $name;
         $data['email']    = $email;
         $data['password'] = $password;
+        $data['document'] = $document;
 
         $data = array_merge([], $options, $data);
 

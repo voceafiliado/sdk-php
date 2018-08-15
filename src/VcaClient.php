@@ -2,13 +2,17 @@
 
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
-use GuzzleHttp\Cookie\SetCookie;
+use VCA\Sdk\Plan\PlanService;
+use VCA\Sdk\User\UserService;
 use VCA\Sdk\Auth\AuthService;
+use VCA\Sdk\User\UserResponse;
+use GuzzleHttp\Cookie\SetCookie;
+use VCA\Sdk\Events\EventsService;
 use VCA\Sdk\Status\StatusService;
+use VCA\Sdk\Product\ProductService;
 use Psr\Http\Message\ResponseInterface;
 use VCA\Sdk\HidePotter\HidePotterService;
-use VCA\Sdk\User\UserResponse;
-use VCA\Sdk\User\UserService;
+use VCA\Sdk\Subscription\SubscriptionService;
 
 class VcaClient
 {
@@ -41,6 +45,26 @@ class VcaClient
      * @var UserResponse
      */
     protected $user;
+
+    /**
+     * @var ProductService
+     */
+    protected $product;
+
+    /**
+     * @var PlanService
+     */
+    protected $plan;
+
+    /**
+     * @var SubscriptionService
+     */
+    protected $subscription;
+
+    /**
+     * @var EventsService
+     */
+    protected $events;
 
     /**
      * @var HidePotterService
@@ -112,6 +136,62 @@ class VcaClient
 
         return $this->user = new UserService($this, [
             'endpoint' => $this->uri('users'),
+        ]);
+    }
+
+    /**
+     * @return ProductService
+     */
+    public function product()
+    {
+        if (! is_null($this->product)) {
+            return $this->product;
+        }
+
+        return $this->product = new ProductService($this, [
+            'endpoint' => $this->uri('products'),
+        ]);
+    }
+
+    /**
+     * @return PlanService
+     */
+    public function plan()
+    {
+        if (! is_null($this->plan)) {
+            return $this->plan;
+        }
+
+        return $this->plan = new PlanService($this, [
+            'endpoint' => $this->uri('plans'),
+        ]);
+    }
+
+    /**
+     * @return SubscriptionService
+     */
+    public function subscription()
+    {
+        if (! is_null($this->subscription)) {
+            return $this->subscription;
+        }
+
+        return $this->subscription = new SubscriptionService($this, [
+            'endpoint' => $this->uri('subscriptions'),
+        ]);
+    }
+
+    /**
+     * @return EventsService
+     */
+    public function events()
+    {
+        if (! is_null($this->events)) {
+            return $this->events;
+        }
+
+        return $this->events = new EventsService($this, [
+            'endpoint' => $this->uri('events'),
         ]);
     }
 
@@ -283,6 +363,19 @@ class VcaClient
 
         $message = isset($json->error->message) ? $json->error->message : '???';
         $code = isset($json->error->code) ? $json->error->code : 0;
+
+        // Verificar se tem erros de atributos
+        if (isset($json->error->errors)) {
+            $info = '';
+            foreach ((array) $json->error->errors as $attr => $msgs) {
+                $info .= " - $attr:\r\n";
+                foreach ($msgs as $msg) {
+                    $info .= "   - $msg\r\n";
+                }
+            }
+
+            $message = sprintf("%s\r\n%s", $message, $info);
+        }
 
         throw new \Exception($message, $code);
     }
