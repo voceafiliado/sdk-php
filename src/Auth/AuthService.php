@@ -11,8 +11,26 @@ class AuthService extends Service
     protected $is_admin = null;
 
     /**
+     * Tester credenciais do usuario.
+     *
+     * @return bool
+     */
+    public function testUser($email, $password)
+    {
+        $return = $this->client->responseJson($this->client->request('post', $this->uri('test-user'), [
+            'form_params' => [
+                'email' => $email,
+                'password' => $password,
+            ],
+        ]));
+
+        return ($return == true);
+    }
+
+    /**
+     * Loga e retorna o access_token.
+     *
      * @return string
-     * Loga e retorna o access_token
      */
     public function login($email, $password)
     {
