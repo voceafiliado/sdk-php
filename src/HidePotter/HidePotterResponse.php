@@ -17,6 +17,7 @@ use Nano7\Foundation\Support\Carbon;
  * @property string $fb_pixel_id
  * @property int $resume_user
  * @property int $resume_cloack
+ * @property Carbon|null $last_access
  * @property Carbon|null $updated_at
  * @property Carbon|null $created_at
  */
@@ -30,6 +31,18 @@ class HidePotterResponse extends ResponseObject
     protected function user($value)
     {
         return new UserResponse($this->client, [], $this->client->uri('users', [$value]));
+    }
+
+    /**
+     * @return null|Carbon
+     */
+    protected function getLastAccessAttr($value)
+    {
+        if (! is_null($value)) {
+            return Carbon::createFromFormat(Carbon::ISO8601, $value);
+        }
+
+        return $value;
     }
 
     /**
