@@ -1,7 +1,7 @@
 <?php namespace VCA\Sdk\Plan;
 
-use Carbon\Carbon;
 use VCA\Sdk\ResponseObject;
+use Nano7\Foundation\Support\Carbon;
 
 /**
  * Class PlanResponse

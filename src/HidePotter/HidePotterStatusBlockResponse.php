@@ -1,8 +1,6 @@
 <?php namespace VCA\Sdk\HidePotter;
 
-use Carbon\Carbon;
 use VCA\Sdk\ResponseObject;
-use VCA\Sdk\User\UserResponse;
 
 /**
  * Class HidePotterStatusBlockResponse

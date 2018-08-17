@@ -18,8 +18,7 @@
 
     "require": {
         "php"               : ">=5.5.0",
-        "illuminate/support": "5.4.*",
-        "nesbot/carbon"     : "^1.20",
+        "nano7/foundation"  : "dev-master",
         "guzzlehttp/guzzle" : "6.3.*"
     },
 

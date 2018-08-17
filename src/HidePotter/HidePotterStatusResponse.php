@@ -1,6 +1,5 @@
 <?php namespace VCA\Sdk\HidePotter;
 
-use Carbon\Carbon;
 use VCA\Sdk\ResponseObject;
 
 /**

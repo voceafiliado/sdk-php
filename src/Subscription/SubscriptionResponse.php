@@ -1,8 +1,8 @@
 <?php namespace VCA\Sdk\Subscription;
 
-use Carbon\Carbon;
 use VCA\Sdk\ResponseObject;
 use VCA\Sdk\User\UserResponse;
+use Nano7\Foundation\Support\Carbon;
 
 /**
  * Class SubscriptionResponse

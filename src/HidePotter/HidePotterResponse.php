@@ -1,9 +1,9 @@
 <?php namespace VCA\Sdk\HidePotter;
 
-use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use VCA\Sdk\ResponseObject;
 use VCA\Sdk\User\UserResponse;
+use Nano7\Foundation\Support\Carbon;
 
 /**
  * Class HidePotterResponse

@@ -1,8 +1,8 @@
 <?php namespace VCA\Sdk\User;
 
-use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use VCA\Sdk\ResponseObject;
+use Nano7\Foundation\Support\Carbon;
 
 /**
  * Class UserResponse

@@ -1,8 +1,8 @@
 <?php namespace VCA\Sdk;
 
-use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Nano7\Foundation\Support\Carbon;
 use Psr\Http\Message\ResponseInterface;
 
 class ResponseObject
