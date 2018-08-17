@@ -97,4 +97,14 @@ class HidePotterResponse extends ResponseObject
     {
         return $this->setStatus('inactived');
     }
+
+    /**
+     * Alias to change status to blocked.
+     *
+     * @return bool
+     */
+    public function block()
+    {
+        return $this->setStatus('blocked');
+    }
 }
