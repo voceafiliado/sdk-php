@@ -8,6 +8,7 @@ use VCA\Sdk\ResponseObject;
  *
  * @property array $user
  * @property array $cloack
+ * @property array $licence
  */
 class HidePotterResumesResponse extends ResponseObject
 {
