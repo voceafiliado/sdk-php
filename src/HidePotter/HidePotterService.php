@@ -78,4 +78,16 @@ class HidePotterService extends Service
 
         return new HidePotterStatusResponse($this->client, $response);
     }
+
+    /**
+     * Get resumes of hidepotters from user.
+     *
+     * @return HidePotterResumesResponse
+     */
+    public function resumes()
+    {
+        $response = $this->client->responseJson($this->client->request('get', $this->uri('resumes')));
+
+        return new HidePotterResumesResponse($this->client, $response);
+    }
 }
